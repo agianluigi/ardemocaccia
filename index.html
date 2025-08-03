@@ -1,11 +1,67 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Demo AR Enigma</title>
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-</head><body style="margin:0;overflow:hidden;">
-  <a-scene embedded arjs="trackingMethod: marker;">
-    <a-marker preset="hiro">
+  <style>
+    #enigma-box {
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      font-family: sans-serif;
+      display: none;
+      z-index: 999;
+    }
+    #result {
+      margin-top: 10px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body style="margin:0; overflow:hidden;">
+  <div id="enigma-box">
+    <div><strong>Indovinello:</strong> Sono sempre davanti a te ma non puoi vedermi. Cosa sono?</div>
+    <input type="text" id="answer" placeholder="Scrivi la risposta...">
+    <button onclick="checkAnswer()">Verifica</button>
+    <div id="result"></div>
+  </div>
+
+  <a-scene embedded arjs>
+    <a-marker preset="hiro" id="marker">
       <a-box position="0 0.5 0" color="#4CC3D9"></a-box>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
-</body></html>
+
+  <script>
+    const marker = document.querySelector("#marker");
+    const enigmaBox = document.getElementById("enigma-box");
+
+    marker.addEventListener("markerFound", () => {
+      enigmaBox.style.display = "block";
+    });
+
+    marker.addEventListener("markerLost", () => {
+      enigmaBox.style.display = "none";
+    });
+
+    function checkAnswer() {
+      const answer = document.getElementById("answer").value.trim().toLowerCase();
+      const result = document.getElementById("result");
+      if (answer === "futuro") {
+        result.textContent = "✅ Corretto! Indizio sbloccato: \"Nel vento...\"";
+      } else {
+        result.textContent = "❌ Risposta errata, riprova.";
+      }
+    }
+  </script>
+</body>
+</html>
+
